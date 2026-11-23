@@ -34,21 +34,25 @@ class ExcelService {
 
     final workbook = XmlDocument.parse(workbookXml);
     final relationships = XmlDocument.parse(relsXml);
-    final firstSheet = workbook.descendants
+    final sheets = workbook.descendants
         .whereType<XmlElement>()
         .where((element) => element.name.local == 'sheet')
-        .firstOrNull;
-    if (firstSheet == null) throw Exception('В файле не найдены листы.');
+        .toList();
+    if (sheets.isEmpty) throw Exception('В файле не найдены листы.');
+    final firstSheet = sheets.first;
 
     final relationshipId = _attribute(firstSheet, 'id');
     if (relationshipId == null) throw Exception('Не удалось определить первый лист Excel.');
-    final relationship = relationships.descendants
+    final matchingRelationships = relationships.descendants
         .whereType<XmlElement>()
         .where((element) =>
             element.name.local == 'Relationship' &&
             _attribute(element, 'Id') == relationshipId)
-        .firstOrNull;
-    if (relationship == null) throw Exception('Не найдена ссылка на первый лист Excel.');
+        .toList();
+    if (matchingRelationships.isEmpty) {
+      throw Exception('Не найдена ссылка на первый лист Excel.');
+    }
+    final relationship = matchingRelationships.first;
 
     final target = _attribute(relationship, 'Target');
     if (target == null || target.isEmpty) throw Exception('У первого листа отсутствует путь.');
@@ -117,7 +121,7 @@ class ExcelService {
       if (file.name == path && file.isFile) {
         final content = file.content;
         if (content is List<int>) return utf8.decode(content);
-        return utf8.decode(file.readBytes());
+        return null;
       }
     }
     return null;
@@ -140,11 +144,12 @@ class ExcelService {
     final type = _attribute(cell, 't');
     if (type == 'inlineStr') return _allTextNodes(cell);
 
-    final valueElement = cell.children
+    final valueElements = cell.children
         .whereType<XmlElement>()
         .where((child) => child.name.local == 'v')
-        .firstOrNull;
-    if (valueElement == null) return '';
+        .toList();
+    if (valueElements.isEmpty) return '';
+    final valueElement = valueElements.first;
     final raw = valueElement.innerText.trim();
 
     if (type == 's') {
