@@ -103,7 +103,7 @@ class _ExpiryDialogState extends State<_ExpiryDialog> {
     title: Text(widget.productFound ? 'Товар найден' : 'Нет в справочнике'),
     content: SingleChildScrollView(child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
       if (widget.productFound) Text(widget.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))
-      else const Text('Название будет пустым', style: TextStyle(color: Colors.grey)),
+      else const Text('Наименование не обнаружено, ищите через F7', style: TextStyle(color: Colors.grey)),
       const SizedBox(height: 8), const Text('Штрихкод', style: TextStyle(color: Colors.grey)),
       SelectableText(widget.barcode), const SizedBox(height: 18),
       const Text('Срок годности'), const SizedBox(height: 6),
@@ -112,7 +112,7 @@ class _ExpiryDialogState extends State<_ExpiryDialog> {
         keyboardType: TextInputType.number,
         inputFormatters: [DateDigitsFormatter()],
         decoration: InputDecoration(
-          hintText: 'ДД.ММ.ГГГГ или 25122026',
+          hintText: 'ДД.ММ.ГГГГ',
           suffixIcon: IconButton(icon: const Icon(Icons.calendar_month), onPressed: _pickDate),
         ),
         onChanged: (_) => _date = null,
