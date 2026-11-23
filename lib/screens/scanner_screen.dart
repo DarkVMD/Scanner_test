@@ -45,10 +45,21 @@ class _ScannerScreenState extends State<ScannerScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Сканирование'), actions: [IconButton(onPressed: () => _controller.toggleTorch(), icon: const Icon(Icons.flashlight_on))]),
+    appBar: AppBar(title: const Text('Сканирование', style: TextStyle(fontWeight: FontWeight.w700)), actions: [IconButton(tooltip: 'Фонарик', onPressed: () => _controller.toggleTorch(), icon: const Icon(Icons.flashlight_on_rounded))]),
     body: Column(children: [
       Expanded(child: MobileScanner(controller: _controller, onDetect: _onDetect)),
-      const Padding(padding: EdgeInsets.all(16), child: Text('Наведите камеру на EAN-13, EAN-8, Code-128 или QR-код', textAlign: TextAlign.center)),
+      Container(
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(22, 17, 22, 22),
+        decoration: const BoxDecoration(color: Color(0xFF151F30), borderRadius: BorderRadius.vertical(top: Radius.circular(22))),
+        child: const Column(children: [
+          Icon(Icons.center_focus_strong_rounded, color: Color(0xFF70B7FF), size: 25),
+          SizedBox(height: 8),
+          Text('Наведите камеру на штрихкод', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+          SizedBox(height: 5),
+          Text('Поддерживаются EAN-13, EAN-8, Code-128 и QR', textAlign: TextAlign.center, style: TextStyle(color: Color(0xFF91A0B5), fontSize: 12)),
+        ]),
+      ),
     ]),
   );
 }
