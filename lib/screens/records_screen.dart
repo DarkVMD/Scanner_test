@@ -42,7 +42,7 @@ class _RecordsScreenState extends State<RecordsScreen> {
           Padding(padding: const EdgeInsets.all(12), child: Row(children: [Text('Всего: ${records.length}', style: const TextStyle(fontWeight: FontWeight.bold)), const Spacer(), FilledButton.icon(onPressed: () => _export(records), icon: const Icon(Icons.ios_share), label: const Text('Экспорт .xlsx'))]),),
           Expanded(child: ListView.separated(itemCount: records.length, separatorBuilder: (_, __) => const Divider(height: 1), itemBuilder: (context, index) {
             final record = records[index];
-            return ListTile(title: Text(record.name), subtitle: Text('${record.barcode}\nСрок годности: ${DateFormat('dd.MM.yyyy').format(DateTime.parse(record.expiryDate))}'), isThreeLine: true, trailing: IconButton(icon: const Icon(Icons.delete_outline), onPressed: () => _delete(record)));
+            return ListTile(title: Text(record.name.isEmpty ? 'Без названия' : record.name), subtitle: Text('${record.barcode}\nСрок годности: ${DateFormat('dd.MM.yyyy').format(DateTime.parse(record.expiryDate))}'), isThreeLine: true, trailing: IconButton(icon: const Icon(Icons.delete_outline), onPressed: () => _delete(record)));
           })),
         ]);
       },
