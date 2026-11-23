@@ -102,7 +102,8 @@ class _ExpiryDialogState extends State<_ExpiryDialog> {
   Widget build(BuildContext context) => AlertDialog(
     title: Text(widget.productFound ? 'Товар найден' : 'Нет в справочнике'),
     content: SingleChildScrollView(child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-      if (widget.productFound) Text(widget.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))\n      else const Text('Название будет пустым', style: TextStyle(color: Colors.grey)),
+      if (widget.productFound) Text(widget.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))
+      else const Text('Название будет пустым', style: TextStyle(color: Colors.grey)),
       const SizedBox(height: 8), const Text('Штрихкод', style: TextStyle(color: Colors.grey)),
       SelectableText(widget.barcode), const SizedBox(height: 18),
       const Text('Срок годности'), const SizedBox(height: 6),
