@@ -30,6 +30,13 @@ jobs:
       - name: Generate Android project
         run: flutter create . --platforms=android --org com.example.shelflife
 
+      - name: Fix project directory
+        run: |
+          if [ -f test ]; then
+            rm test
+          fi
+          mkdir -p test
+          
       - name: Add camera permission
         shell: bash
         run: |
