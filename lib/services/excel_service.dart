@@ -187,7 +187,8 @@ class ExcelService {
   static Uint8List exportRecords(List<ExpiryRecord> records) {
     final book = Excel.createExcel();
     final sheet = book['Сроки годности'];
-    // Export data rows only; no header row.\n    for (final record in records) {
+    // Export data rows only; no header row.
+    for (final record in records) {
       final date = DateFormat('dd.MM.yyyy').format(DateTime.parse(record.expiryDate));
       // TextCellValue is intentional: EANs must never be exported as numeric cells.
       sheet.appendRow([
