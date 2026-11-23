@@ -1,0 +1,59 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build release APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate Android project
+        run: flutter create . --platforms=android --org com.example.shelflife
+
+      - name: Add camera permission
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          manifest = Path('android/app/src/main/AndroidManifest.xml')
+          content = manifest.read_text(encoding='utf-8')
+          permission = '    <uses-permission android:name="android.permission.CAMERA" />\n'
+          if 'android.permission.CAMERA' not in content:
+              marker = '    <application'
+              if marker not in content:
+                  raise SystemExit('Could not find <application> in AndroidManifest.xml')
+              content = content.replace(marker, permission + marker, 1)
+              manifest.write_text(content, encoding='utf-8')
+          PY
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: shelf-life-scanner-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 14
