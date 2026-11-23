@@ -1,0 +1,27 @@
+name: shelf_life_scanner
+description: Offline barcode and expiry-date inventory helper.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  mobile_scanner: ^7.1.3
+  sqflite: ^2.4.2
+  path: ^1.9.1
+  file_picker: ^10.3.3
+  excel: ^4.0.6
+  share_plus: ^12.0.1
+  intl: ^0.20.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
