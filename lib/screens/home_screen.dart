@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: const Text('Shelf Life Scanner', style: TextStyle(fontWeight: FontWeight.w700, letterSpacing: 0.2)),
+      title: const Text('Vscan', style: TextStyle(fontWeight: FontWeight.w700, letterSpacing: 0.2)),
       centerTitle: false,
       actions: [
         Padding(
