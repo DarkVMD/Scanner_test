@@ -51,6 +51,34 @@ jobs:
               manifest.write_text(content, encoding='utf-8')
           PY
 
+      - name: Set Vscan app name and launcher icon
+        run: |
+          mkdir -p android/app/src/main/res/drawable
+          cat > android/app/src/main/res/drawable/vscan_icon.xml <<'XML'
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="48dp"
+              android:height="48dp"
+              android:viewportWidth="48"
+              android:viewportHeight="48">
+              <path android:fillColor="#0B1220" android:pathData="M0,0h48v48h-48z" />
+              <path
+                  android:fillColor="#00000000"
+                  android:strokeColor="#70B7FF"
+                  android:strokeWidth="3"
+                  android:strokeLineCap="square"
+                  android:pathData="M8,17V10a2,2 0,0 1,2 -2h7 M31,8h7a2,2 0,0 1,2 2v7 M40,31v7a2,2 0,0 1,-2 2h-7 M17,40h-7a2,2 0,0 1,-2 -2v-7" />
+              <path android:fillColor="#70D6B0" android:pathData="M15,17h2v14h-2z M19,17h1v14h-1z M22,17h3v14h-3z M27,17h1v14h-1z M30,17h2v14h-2z M34,17h1v14h-1z" />
+          </vector>
+          XML
+          python3 - <<'PY'
+          from pathlib import Path
+          manifest = Path('android/app/src/main/AndroidManifest.xml')
+          content = manifest.read_text(encoding='utf-8')
+          content = content.replace('android:label="shelf_life_scanner"', 'android:label="Vscan"')
+          content = content.replace('android:icon="@mipmap/ic_launcher"', 'android:icon="@drawable/vscan_icon"')
+          manifest.write_text(content, encoding='utf-8')
+          PY
+
       - name: Build release APK
         run: flutter build apk --release
 
