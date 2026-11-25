@@ -15,7 +15,7 @@ class ShelfLifeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'Shelf Life Scanner',
+    title: 'Vscan',
     debugShowCheckedModeBanner: false,
     theme: ThemeData(
       useMaterial3: true,
