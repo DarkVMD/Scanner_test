@@ -186,6 +186,8 @@ class ExcelService {
 
   static Uint8List exportRecords(List<ExpiryRecord> records) {
     final book = Excel.createExcel();
+    // Remove the automatically generated empty Sheet1 worksheet.
+    book.delete('Sheet1');
     final sheet = book['Сроки годности'];
     // Export data rows only; no header row.
     for (final record in records) {
