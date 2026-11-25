@@ -19,7 +19,7 @@ class _RecordsScreenState extends State<RecordsScreen> {
     if (records.isEmpty) return;
     try {
       final bytes = ExcelService.exportRecords(records);
-      await Share.shareXFiles([XFile.fromData(bytes, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', name: 'sroki_godnosti.xlsx')], text: 'Экспорт сроков годности');
+      await Share.shareXFiles([XFile.fromData(bytes, mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', name: 'vscan_sroki_godnosti.xlsx')], text: 'Экспорт сроков годности');
     } catch (e) {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка экспорта: $e')));
     }
@@ -29,6 +29,30 @@ class _RecordsScreenState extends State<RecordsScreen> {
     if (record.id == null) return;
     await DatabaseService.instance.delete(record.id!);
     _reload();
+  }
+
+  Future<void> _clearAll() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Очистить историю?'),
+        content: const Text('Все сохранённые записи будут удалены без возможности восстановления.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Отмена')),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: const Color(0xFFB94A55)),
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Удалить всё'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await DatabaseService.instance.deleteAll();
+    if (mounted) {
+      _reload();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('История очищена')));
+    }
   }
 
   @override
@@ -59,14 +83,25 @@ class _RecordsScreenState extends State<RecordsScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+              padding: const EdgeInsets.all(13),
               decoration: BoxDecoration(color: const Color(0xFF151F30), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFF26364B))),
-              child: Row(children: [
-                const Icon(Icons.checklist_rounded, color: Color(0xFF70D6B0), size: 21),
-                const SizedBox(width: 10),
-                Text('Всего записей: ${records.length}', style: const TextStyle(fontWeight: FontWeight.w700)),
-                const Spacer(),
-                FilledButton.tonalIcon(onPressed: () => _export(records), icon: const Icon(Icons.ios_share_rounded, size: 17), label: const Text('Экспорт')),
+              child: Column(children: [
+                Row(children: [
+                  const Icon(Icons.checklist_rounded, color: Color(0xFF70D6B0), size: 21),
+                  const SizedBox(width: 10),
+                  Text('Всего записей: ${records.length}', style: const TextStyle(fontWeight: FontWeight.w700)),
+                ]),
+                const SizedBox(height: 11),
+                Row(children: [
+                  Expanded(child: FilledButton.tonalIcon(onPressed: () => _export(records), icon: const Icon(Icons.ios_share_rounded, size: 17), label: const Text('Экспорт'))),
+                  const SizedBox(width: 9),
+                  Expanded(child: OutlinedButton.icon(
+                    onPressed: _clearAll,
+                    icon: const Icon(Icons.delete_sweep_outlined, size: 18, color: Color(0xFFFF8585)),
+                    label: const Text('Очистить всё', style: TextStyle(color: Color(0xFFFF8585))),
+                    style: OutlinedButton.styleFrom(side: const BorderSide(color: Color(0xFF75404A))),
+                  )),
+                ]),
               ]),
             ),
           ),
