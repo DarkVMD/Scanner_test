@@ -41,4 +41,9 @@ class DatabaseService {
     final database = await db;
     await database.delete('records', where: 'id = ?', whereArgs: [id]);
   }
+
+  Future<void> deleteAll() async {
+    final database = await db;
+    await database.delete('records');
+  }
 }
